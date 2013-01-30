@@ -16,3 +16,5 @@ List and Description of Files
 
 cmd_prompt_auto_complete.reg - enable file name auto completion in cmd prompt
 
+explorer_cmd_prompt_menu.reg - add cmd prompt to right-click menu in explorer
+
