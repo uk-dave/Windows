@@ -14,3 +14,5 @@ Copyright (C) 2013, David C. Merritt, david.c.merritt@siemens.com
 List and Description of Files
 =============================
 
+cmd_prompt_auto_complete.reg - enable file name auto completion in cmd prompt
+
