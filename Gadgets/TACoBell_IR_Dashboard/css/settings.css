@@ -1,0 +1,24 @@
+body, td, textarea, input, select, button, div, p, a {
+    font-family: Arial;
+	font-size: 13px;
+}
+
+body {
+	width: 150px;
+	yheight: 205px;
+	xheight: 105px;
+	height: 135px;
+	margin: 0px;
+}
+
+.lw {
+	xwidth: 90px;
+	width: 100%;
+}
+
+
+
+
+
+
+

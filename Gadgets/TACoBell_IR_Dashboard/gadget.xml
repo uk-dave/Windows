@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gadget>
+    <name>TACoBell IR Dashboard</name>
+    <version>1.0</version>
+    <author name="David C. Merritt">
+        <info url="about.me/davidmerritt" />
+        <logo src="images/DMlogo.png" />
+    </author>
+    <copyright>&#169; 2014</copyright>
+    <description>
+        Displays the GTAC EMEA TACoBell IR dashboard in a Windows sidebar gadget.
+    </description>
+    <icons>
+        <icon src="images\\TACoBell.gif" width="96" height="96" />
+    </icons>
+    <hosts>
+        <host name="sidebar">
+            <base type="HTML" apiVersion="1.0.0" src="main.html" />
+            <permissions>Full</permissions>
+            <platform minPlatformVersion="1.0" />
+        </host>
+    </hosts>
+</gadget>

@@ -1,0 +1,20 @@
+body 
+{
+    font-family: Calibri, Tahoma, sans-serif;
+	font-size: 12px;
+	width: 1230px;
+	height: 105px;
+	margin: 0;
+	padding: 0;
+	background: #000000;
+	color: white;
+}
+
+
+iframe
+{
+    overflow-x: auto;
+    overflow-y: auto;
+    overflow: auto;
+
+}
