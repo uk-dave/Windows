@@ -16,8 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------
 
-A Windows Sidebar gadget ...
+A Windows Sidebar gadget for a simple countdown timer for Windows.
 
+The idea for this gadget came from my previous use of Dan Hersham's 
+SnapTimer program (http://dan.hersam.com/software/snaptimer/).  The
+alarm audio .wav files are copied from SnapTimer.
+
+Colour picker code used in the options courtesy of Jan Odvárko at
+http://jscolor.com/
 
 ---------------------------------------------------------------------
 
