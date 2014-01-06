@@ -1,0 +1,40 @@
+Display_Web_Page
+Copyright (C) 2014, David C. Merritt, david.c.merritt@siemens.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+---------------------------------------------------------------------
+
+A Windows Sidebar gadget designed to display a web page in a minimal 
+window and avoid the overhead and wasted screen real estate with 
+displaying the same web page in an internet browser window such as 
+Internet Explorer.
+
+This is a useful gadget to display a constantly updating web page in 
+a small window without the overhead of a internet browser i.e. 
+streaming music sites would be a good example for this gadget.
+
+By developing a Sidebar gadget the features offered by gadgets can be 
+implemented providing user interaction not typically associated with 
+displaying the web page in an internet browser window, including 
+window can be pinned to always be on top of other windows, 
+have opacity when not actively viewed, being quickly expanded and 
+shrunk, not being accidentally closed when exiting out of an internet 
+browsing session, etc.
+
+---------------------------------------------------------------------
+
+06/01/2014  merritt  initial release
+
+

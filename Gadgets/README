@@ -14,6 +14,8 @@ Copyright (C) 2014 David C. Merritt, david.c.merritt@siemens.com
 List and Description of Files
 =============================
 
+Display_Web_Page = display a web page in a gadget
+
 TACoBell_IR_Dashboard - display the GTAC TACoBell IR Dashboard in a gadget
 
 Work_Timer - simple pomodoro style countdown timer to monitor time worked
