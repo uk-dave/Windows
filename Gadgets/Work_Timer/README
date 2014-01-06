@@ -16,7 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------
 
-A Windows Sidebar gadget for a simple countdown timer for Windows.
+A Windows Sidebar gadget for a simple pomodoro style countdown timer 
+for Windows.
+
+Features include:
+    Autostart
+    Single-click start/stop and double-click reset
+    Selectable alarm sound and customisable alarm message
+    Selectable font and background colours to match your desktop theme
+    Negative timer once alarm fired
 
 The idea for this gadget came from my previous use of Dan Hersham's 
 SnapTimer program (http://dan.hersam.com/software/snaptimer/).  The
