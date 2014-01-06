@@ -27,10 +27,10 @@
  * 
  * 03/01/2014  merritt  initial release
  * 05/01/2014  merritt  added copyright notice and delay launch option
+ * 06/01/2014  merritt  removed double xml declaration
  * 
  ************************************************************************
 -->
-<?xml version="1.0" encoding="utf-8" ?>
 <gadget>
     <name>TACoBell IR Dashboard</name>
     <version>1.0</version>
