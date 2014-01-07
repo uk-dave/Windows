@@ -26,6 +26,7 @@
  * 
  * 06/01/2014  merritt  initial release
  * 07/01/2014  merritt  changed default settings for my personal needs
+ * 07/01/2014  merritt  corrected web page launch delay
  * 
  ************************************************************************
 */
@@ -76,7 +77,7 @@ if (System.Gadget.Settings.read("DelayStart") == "")
 
 
 
-// set the TACoBell url
+// set the web page url
 var webUrl = System.Gadget.Settings.read("WebUrl");
 var delayCount = System.Gadget.Settings.read("DelayStart") * 60;
 
@@ -90,9 +91,12 @@ function CheckDockState()
 
     var oBody = document.body.style;
     
-    if (document.getElementById("tacoFrame").src != System.Gadget.Settings.read("WebUrl"))
+    if (delayCount <= 0)
     {
-        document.getElementById("tacoFrame").src = System.Gadget.Settings.read("WebUrl");
+        if (document.getElementById("webpageFrame").src != System.Gadget.Settings.read("WebUrl"))
+        {
+            document.getElementById("webpageFrame").src = System.Gadget.Settings.read("WebUrl");
+        }
     }
 
     if (System.Gadget.docked)
@@ -102,22 +106,22 @@ function CheckDockState()
         
         if (System.Gadget.Settings.read("ClipDocked"))
         {
-            document.getElementById("tacoFrame").width = System.Gadget.Settings.read("WidthDocked") + 1000;
-            document.getElementById("tacoFrame").height = System.Gadget.Settings.read("HeightDocked") + 1000; 
-            document.getElementById("tacoFrame").scrolling = "yes";            
+            document.getElementById("webpageFrame").width = System.Gadget.Settings.read("WidthDocked") + 1000;
+            document.getElementById("webpageFrame").height = System.Gadget.Settings.read("HeightDocked") + 1000; 
+            document.getElementById("webpageFrame").scrolling = "yes";            
         }
         else
         {
-            document.getElementById("tacoFrame").width = System.Gadget.Settings.read("WidthDocked");
-            document.getElementById("tacoFrame").height = System.Gadget.Settings.read("HeightDocked");
+            document.getElementById("webpageFrame").width = System.Gadget.Settings.read("WidthDocked");
+            document.getElementById("webpageFrame").height = System.Gadget.Settings.read("HeightDocked");
         }  
     }
     else
     {
         oBody.width = System.Gadget.Settings.read("WidthUndocked");
         oBody.height = System.Gadget.Settings.read("HeightUndocked");  
-        document.getElementById("tacoFrame").width = System.Gadget.Settings.read("WidthUndocked");
-        document.getElementById("tacoFrame").height = System.Gadget.Settings.read("HeightUndocked");
+        document.getElementById("webpageFrame").width = System.Gadget.Settings.read("WidthUndocked");
+        document.getElementById("webpageFrame").height = System.Gadget.Settings.read("HeightUndocked");
     }
     
     System.Gadget.endTransition(System.Gadget.TransitionType.morph, timeTransition);
@@ -139,7 +143,7 @@ function CheckLaunch()
     if (delayCount <= 0)
     {
         document.getElementById("displayDelay").firstChild.nodeValue = "";        
-        document.getElementById("tacoFrame").src = webUrl;
+        document.getElementById("webpageFrame").src = webUrl;
     }
     else
     {
@@ -180,7 +184,7 @@ function CountDown()
     if (delayCount <= 0)
     {
         document.getElementById("displayDelay").firstChild.nodeValue = "Launching web page...";        
-        document.getElementById("tacoFrame").src = webUrl;
+        document.getElementById("webpageFrame").src = webUrl;
         document.getElementById("displayDelay").firstChild.nodeValue = "";        
         clearInterval(intervalId);
         return;

@@ -31,7 +31,7 @@
 -->
 <gadget>
     <name>Display Web Page</name>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <author name="David C. Merritt">
         <info url="about.me/davidmerritt" />
         <logo src="images/DMlogo.png" />
