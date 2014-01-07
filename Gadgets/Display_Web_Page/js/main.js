@@ -25,6 +25,7 @@
  ************************************************************************
  * 
  * 06/01/2014  merritt  initial release
+ * 07/01/2014  merritt  changed default settings for my personal needs
  * 
  ************************************************************************
 */
@@ -40,37 +41,37 @@ System.Gadget.onUndock = CheckDockState;
 // set the default settings if not set
 if (System.Gadget.Settings.read("WebUrl") == "")
 {
-    System.Gadget.Settings.write("WebUrl", "http://www.bbc.co.uk/radio/player/bbc_6music");
+    System.Gadget.Settings.write("WebUrl", "http://www.977music.com/flashplayer/alternative/4.html");
 }
 
 if (System.Gadget.Settings.read("WidthDocked") == "")
 {
-    System.Gadget.Settings.write("WidthDocked", 380);
+    System.Gadget.Settings.write("WidthDocked", 375);
 }
 
 if (System.Gadget.Settings.read("HeightDocked") == "")
 {
-    System.Gadget.Settings.write("HeightDocked", 100);
+    System.Gadget.Settings.write("HeightDocked", 150);
 }
 
 if (System.Gadget.Settings.read("WidthUndocked") == "")
 {
-    System.Gadget.Settings.write("WidthUndocked", 400);
+    System.Gadget.Settings.write("WidthUndocked", 600);
 }
 
 if (System.Gadget.Settings.read("HeightUndocked") == "")
 {
-    System.Gadget.Settings.write("HeightUndocked", 665);
+    System.Gadget.Settings.write("HeightUndocked", 190);
 }
 
 if (System.Gadget.Settings.read("ClipDocked") == "")
 {
-    System.Gadget.Settings.write("ClipDocked", true);
+    System.Gadget.Settings.write("ClipDocked", false);
 }
 
 if (System.Gadget.Settings.read("DelayStart") == "")
 {
-    System.Gadget.Settings.write("DelayStart", 0);
+    System.Gadget.Settings.write("DelayStart", 2);
 }
 
 
