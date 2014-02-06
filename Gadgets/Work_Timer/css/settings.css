@@ -25,6 +25,7 @@
  ************************************************************************
  * 
  * 05/01/2014  merritt  initial release
+ * 06/02/2014  merritt  added paused alert
  * 
  ************************************************************************
 */
@@ -35,8 +36,8 @@ body, td, textarea, input, select, button, div, p, a {
 }
 
 body {
-	yheight: 235px;
-	height: 235px;
+	yheight: 275px;
+	height: 275px;
 	xheight: 105px;
 	width: 240px;
 	margin: 0px;

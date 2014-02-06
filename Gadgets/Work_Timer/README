@@ -24,6 +24,7 @@ Features include:
     Single-click start/stop and double-click reset
     Selectable alarm sound and customisable alarm message
     Selectable font and background colours to match your desktop theme
+    Customisable flashing paused alert
     Negative timer once alarm fired
 
 The idea for this gadget came from my previous use of Dan Hersham's 
@@ -36,4 +37,4 @@ http://jscolor.com/
 ---------------------------------------------------------------------
 
 03/01/2014  merritt  initial release to GitHub
-
+06/02/2014  merritt  added paused alert

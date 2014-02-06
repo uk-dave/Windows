@@ -25,6 +25,7 @@
  ************************************************************************
  * 
  * 05/01/2014  merritt  initial release
+ * 06/02/2014  merritt  added paused alert
  * 
  ************************************************************************
 */
@@ -51,6 +52,16 @@ if (System.Gadget.Settings.read("Colour") == "")
 if (System.Gadget.Settings.read("Background") == "")
 {
     System.Gadget.Settings.write("Background", "000000");
+}
+
+if (System.Gadget.Settings.read("Paused") == "")
+{
+    System.Gadget.Settings.write("Paused", "ff0000");
+}
+
+if (System.Gadget.Settings.read("PausedFlash") == "")
+{
+    System.Gadget.Settings.write("PausedFlash", true);
 }
 
 if (System.Gadget.Settings.read("Message") == "")
@@ -80,6 +91,7 @@ var negCount = System.Gadget.Settings.read("NegativeCount");
 var alertMe = true;
 var intervalId;
 var blinkId;
+var pauseId;
 
  // on initial load display the default time and check if to auto start
 function CheckStart()
@@ -101,15 +113,30 @@ function StartStop()
     {
         running = false;
         clearInterval(intervalId);   
-        System.Gadget.Flyout.show = false;        
+        System.Gadget.Flyout.show = false;     
+
+        // change the background when paused
+        if (System.Gadget.Settings.read("PausedFlash"))
+        {
+            pauseId = setInterval(function(){BlinkPaused()},500);
+        }
+        else
+        {
+            document.body.style.backgroundColor = System.Gadget.Settings.read("Paused");
+        }
+       
         if (! negCount)
         {
             document.getElementById("timer").style.visibility = "visible";
         }
+        
     }
     else
     {
-        running = true;      
+        running = true;   
+        clearInterval(pauseId);       
+        document.body.style.backgroundColor = System.Gadget.Settings.read("Background");        
+        
         if (! negCount)
         {
             if (startTime > 0)
@@ -129,6 +156,7 @@ function Reset()
 {
     clearInterval(intervalId);
     clearInterval(blinkId);
+    clearInterval(pauseId);
     document.getElementById("timer").style.visibility = "visible";
     System.Gadget.Flyout.show = false;
     running = false;
@@ -167,6 +195,29 @@ function CountDown()
 
     DisplayTime(startTime);
 }    
+
+// flash background indefinitely when countdown paused
+function BlinkPaused()
+{
+    if (System.Gadget.Settings.read("Background") == "000000")
+    {
+        currentBackground = "#000000"; 
+    }
+    else
+    {
+        currentBackground = "#" + System.Gadget.Settings.read("Background");
+    }
+    
+    if (document.body.style.backgroundColor == currentBackground)
+    {
+        document.body.style.backgroundColor = System.Gadget.Settings.read("Paused");    
+    }
+    else
+    {
+        document.body.style.backgroundColor = System.Gadget.Settings.read("Background");         
+    }
+    return;
+}
 
 // blink the text indefinitely when countdown complete
 function BlinkText()
@@ -210,8 +261,26 @@ function DisplayTime(now)
     }
     
     // set the colour and text
-    document.body.style.backgroundColor = System.Gadget.Settings.read("Background");
     document.body.style.color = System.Gadget.Settings.read("Colour");
+    
+    // set background colour based on running state
+    if (running)
+    {
+        document.body.style.backgroundColor = System.Gadget.Settings.read("Background");
+    }
+    else
+    {
+        // change the background when paused
+        if (System.Gadget.Settings.read("PausedFlash"))
+        {
+            pauseId = setInterval(function(){BlinkPaused()},500);
+        }
+        else
+        {
+            document.body.style.backgroundColor = System.Gadget.Settings.read("Paused");
+        }      
+    }
+      
     if (showNeg)
     {
         document.getElementById("timer").firstChild.nodeValue = "-" + hour + ":" + min + ":" + sec;
@@ -234,10 +303,25 @@ function SettingsClosed(event)
 {
     // user hits OK on the settings page
     if (event.closeAction == event.Action.commit)
-    {
-        // set the colour and text
-        document.body.style.backgroundColor = System.Gadget.Settings.read("Background");
-        document.body.style.color = System.Gadget.Settings.read("Colour");
+    {    
+        // set background colour based on running state
+        if (running)
+        {
+            document.body.style.backgroundColor = System.Gadget.Settings.read("Background");
+        }
+        else
+        {
+            clearInterval(pauseId);
+            // change the background when paused          
+            if (System.Gadget.Settings.read("PausedFlash"))
+            {
+                pauseId = setInterval(function(){BlinkPaused()},500);
+            }
+            else
+            {                  
+                document.body.style.backgroundColor = System.Gadget.Settings.read("Paused");
+            }       
+        }
         
         negCount = System.Gadget.Settings.read("NegativeCount");         
     }

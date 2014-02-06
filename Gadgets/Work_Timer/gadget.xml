@@ -26,12 +26,13 @@
  ************************************************************************
  * 
  * 05/01/2014  merritt  initial release
+ * 06/02/2014  merritt  changed version no for paused alert
  * 
  ************************************************************************
 -->
 <gadget>
     <name>Work Timer</name>
-    <version>1.0</version>
+    <version>1.1</version>
     <author name="David C. Merritt">
         <info url="about.me/davidmerritt" />
         <logo src="images/DMlogo.png" />

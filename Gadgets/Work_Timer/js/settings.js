@@ -25,6 +25,7 @@
  ************************************************************************
  * 
  * 05/01/2014  merritt  initial release
+ * 06/02/2014  merritt  added paused alert
  * 
  ************************************************************************
 */
@@ -35,6 +36,8 @@ System.Gadget.onSettingsClosing = settingsClosing;
 function loadSettings()
 {
 	Minutes.innerText = System.Gadget.Settings.read("Minutes");
+    
+    // account for 000000 getting rounded to 0
     if (System.Gadget.Settings.read("Colour") == "000000")
     {
         ColourFont.innerText = "000000"; 
@@ -52,6 +55,17 @@ function loadSettings()
     {
         ColourBackground.innerText = System.Gadget.Settings.read("Background");
     }
+    
+    if (System.Gadget.Settings.read("Paused") == "000000")
+    {
+        ColourPaused.innerText = "000000"; 
+    }
+    else
+    {
+        ColourPaused.innerText = System.Gadget.Settings.read("Paused");
+    }
+    
+    document.getElementById("PausedFlash").checked = System.Gadget.Settings.read("PausedFlash");
     MsgText.innerText = System.Gadget.Settings.read("Message");
     Alarm.value = System.Gadget.Settings.read("AlarmSound");
     document.getElementById("Autostart").checked = System.Gadget.Settings.read("Autostart");
@@ -66,6 +80,17 @@ function settingsClosing(event)
 		System.Gadget.Settings.write("Minutes", Minutes.value);      
 		System.Gadget.Settings.write("Colour", ColourFont.value);
 		System.Gadget.Settings.write("Background", ColourBackground.value);      
+		System.Gadget.Settings.write("Paused", ColourPaused.value); 
+  
+        if (PausedFlash.checked)
+        {
+            System.Gadget.Settings.write("PausedFlash", true);
+        }
+        else
+        {
+            System.Gadget.Settings.write("PausedFlash", false);
+        }
+     
 		System.Gadget.Settings.write("Message", MsgText.value);
 		System.Gadget.Settings.write("AlarmSound", Alarm.value);
         
