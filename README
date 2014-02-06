@@ -11,8 +11,15 @@ provided LICENSE file.
 
 Copyright (C) 2013, 2014 David C. Merritt, david.c.merritt@siemens.com
 
-List and Description of Folders and Files
-=========================================
+List and Description of Folders
+===============================
+
+Gadgets - various Windows Sidebar Gagdets
+
+Registry - various Windows registry tweaks
+
+List and Description of Files
+=============================
 
 CreateNetworkLocations.vbs - automate the creation of Network Location shortcuts 
     
