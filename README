@@ -11,9 +11,21 @@ provided LICENSE file.
 
 Copyright (C) 2013, 2014 David C. Merritt, david.c.merritt@siemens.com
 
-List and Description of Files
-=============================
+List and Description of Folders and Files
+=========================================
 
-CreateNetworkLocations.vbs - automate the creation of Network Location shortcuts
+CreateNetworkLocations.vbs - automate the creation of Network Location shortcuts 
     
-    
+Gadgets /
+
+  Display_Web_Page = display a web page in a gadget
+
+  TACoBell_IR_Dashboard - display the GTAC TACoBell IR Dashboard in a gadget
+
+  Work_Timer - simple pomodoro style countdown timer to monitor time worked
+
+Registry /
+
+  cmd_prompt_auto_complete.reg - enable file name auto completion in cmd prompt
+
+  explorer_cmd_prompt_menu.reg - add cmd prompt to right-click menu in explorer
