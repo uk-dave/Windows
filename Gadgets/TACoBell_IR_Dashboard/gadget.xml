@@ -28,12 +28,13 @@
  * 03/01/2014  merritt  initial release
  * 05/01/2014  merritt  added copyright notice and delay launch option
  * 06/01/2014  merritt  removed double xml declaration
+ * 06/03/2104  merritt  added lost connection checking
  * 
  ************************************************************************
 -->
 <gadget>
     <name>TACoBell IR Dashboard</name>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <author name="David C. Merritt">
         <info url="about.me/davidmerritt" />
         <logo src="images/DMlogo.png" />

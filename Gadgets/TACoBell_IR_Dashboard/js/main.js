@@ -26,6 +26,7 @@
  * 
  * 03/01/2014  merritt  initial release
  * 05/01/2014  merritt  added copyright notice and delay launch option
+ * 06/03/2014  merritt  changed page load delay to 15 for VPN connection
  * 
  ************************************************************************
 */
@@ -66,7 +67,7 @@ if (System.Gadget.Settings.read("ClipDocked") == "")
 
 if (System.Gadget.Settings.read("DelayStart") == "")
 {
-    System.Gadget.Settings.write("DelayStart", 0);
+    System.Gadget.Settings.write("DelayStart", 0.10);
 }
 
 // set the TACoBell url
@@ -126,7 +127,7 @@ function CheckLaunch()
 {
     if (delayCount <= 0)
     {
-        document.getElementById("displayDelay").firstChild.nodeValue = "";        
+        document.getElementById("displayDelay").firstChild.nodeValue = "Done";        
         document.getElementById("tacoFrame").src = urlTacobell;
     }
     else
@@ -169,7 +170,7 @@ function CountDown()
     {
         document.getElementById("displayDelay").firstChild.nodeValue = "Launching TACoBell...";        
         document.getElementById("tacoFrame").src = urlTacobell;
-        document.getElementById("displayDelay").firstChild.nodeValue = "";        
+        document.getElementById("displayDelay").firstChild.nodeValue = "Loaded";        
         clearInterval(intervalId);
         return;
     }

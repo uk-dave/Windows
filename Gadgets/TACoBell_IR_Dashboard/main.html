@@ -26,6 +26,7 @@
  * 
  * 03/01/2014  merritt  initial release
  * 05/01/2014  merritt  added copyright notice and delay launch option
+ * 06/03/2014  merritt  added event listener to catch offline state
  * 
  ************************************************************************
 -->
@@ -36,10 +37,76 @@
         <script src="js/main.js" type="text/javascript"></script>
     </head>
     
+ <script>
+<!--
+window.addEventListener("offline", function(e) 
+    {
+        document.getElementById("displayDelay").firstChild.nodeValue = "Offline";        
+        document.getElementById("tacoFrame").src = "";
+    }
+)
+window.addEventListener("online", function(e) {alert("online");})
+
+if (navigator.onLine) 
+{
+    document.getElementById("displayDelay").firstChild.nodeValue = "Online";     
+} 
+else 
+{
+    document.getElementById("displayDelay").firstChild.nodeValue = "Offline";        
+    document.getElementById("tacoFrame").src = "";
+}
+-->
+</script>   
+    
+   <!-- 
+    
+    <script type="text/javascript">
+        
+
+(function () {
+	var displayOnlineStatus = document.getElementById("displayDelay"),
+		isOnline = function () 
+        {
+			displayOnlineStatus.innerHTML = "Online";
+			displayOnlineStatus.className = "online";
+		},
+		isOffline = function () 
+        {
+			document.getElementById("displayDelay").firstChild.nodeValue = "Offline";        
+            document.getElementById("tacoFrame").src = "";
+		};
+		
+	if (window.addEventListener) {
+        /*
+            Works well in Firefox and Opera with the 
+            Work Offline option in the File menu.
+            Pulling the ethernet cable doesn't seem to trigger it.
+            Later Google Chrome and Safari seem to trigger it well
+        */
+		window.addEventListener("online", isOnline, false);
+		window.addEventListener("offline", isOffline, false);
+	}
+	else {
+		/*
+			Works in IE with the Work Offline option in the 
+			File menu and pulling the ethernet cable
+		*/
+		document.body.ononline = isOnline;
+		document.body.onoffline = isOffline;
+	}
+})();        
+        
+        
+        
+    </script>
+ -->
+
+ 
     <body id="mainBody" onLoad="CheckLaunch();">
-        <span id="displayDelay">
+        <div id="displayDelay">
             Launching TACoBell...
+        </div>
             <iframe id="tacoFrame" src="" scrolling="yes" border="0"></iframe>
-        </span>
     </body>
 </html>

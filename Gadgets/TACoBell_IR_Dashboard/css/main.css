@@ -26,19 +26,20 @@
  * 
  * 03/01/2014  merritt  initial release
  * 05/01/2014  merritt  added copyright notice and delay launch option
+ * 06/03/2014  merritt  changed background colour to support network drop
  * 
  ************************************************************************
 */
 body 
 {
-    font-family: Calibri, Tahoma, sans-serif;
+    font-family: Arial, sans-serif;
 	font-size: 12px;
 	width: 1230px;
 	height: 105px;
 	margin: 0;
 	padding: 0;
-	background: #000000;
-	color: white;
+	background: #eeeedd;
+	color: black;
 }
 
 
@@ -47,5 +48,4 @@ iframe
     overflow-x: auto;
     overflow-y: auto;
     overflow: auto;
-
 }
