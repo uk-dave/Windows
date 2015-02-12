@@ -3,7 +3,7 @@
  ************************************************************************
  *
  * TACoBell_IR_Dashboard
- * Copyright (C) 2014, David C. Merritt, david.c.merritt@siemens.com
+ * Copyright (C) 2014-2015, David C. Merritt, david.c.merritt@siemens.com
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,17 +29,19 @@
  * 05/01/2014  merritt  added copyright notice and delay launch option
  * 06/01/2014  merritt  removed double xml declaration
  * 06/03/2104  merritt  added lost connection checking
+ * 12/02/2015  merritt  updated TACoBell url
+ *                      updated copyright notice
  * 
  ************************************************************************
 -->
 <gadget>
     <name>TACoBell IR Dashboard</name>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <author name="David C. Merritt">
         <info url="about.me/davidmerritt" />
         <logo src="images/DMlogo.png" />
     </author>
-    <copyright>&#169; 2014</copyright>
+    <copyright>&#169; 2014-2015</copyright>
     <description>
         Displays the GTAC EMEA TACoBell IR dashboard in a Windows sidebar gadget.
     </description>

@@ -2,7 +2,7 @@
  ************************************************************************
  *
  * TACoBell_IR_Dashboard
- * Copyright (C) 2014, David C. Merritt, david.c.merritt@siemens.com
+ * Copyright (C) 2014-2015, David C. Merritt, david.c.merritt@siemens.com
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@
  * 03/01/2014  merritt  initial release
  * 05/01/2014  merritt  added copyright notice and delay launch option
  * 06/03/2014  merritt  changed page load delay to 15 for VPN connection
+ * 12/02/2015  merritt  updated DelayStart to appropriate personal value 
+ *                      updated copyright notice
  * 
  ************************************************************************
 */
@@ -67,11 +69,11 @@ if (System.Gadget.Settings.read("ClipDocked") == "")
 
 if (System.Gadget.Settings.read("DelayStart") == "")
 {
-    System.Gadget.Settings.write("DelayStart", 0.10);
+    System.Gadget.Settings.write("DelayStart", 10);
 }
 
 // set the TACoBell url
-var urlTacobell = "http://gbcbygtac01:8080/cgi-bin/tb_main_page.pl";
+var urlTacobell = "http://decgnvsgtac01/cgi-bin/tb_main_page.pl";
 var delayCount = System.Gadget.Settings.read("DelayStart") * 60;
 
 // amount of time desired to perform dock transition (in seconds)
