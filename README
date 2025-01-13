@@ -16,6 +16,8 @@ List and Description of Folders
 
 Gadgets - various Windows Sidebar Gagdets
 
+ObfuscateLogs - obfuscate log files
+
 Registry - various Windows registry tweaks
 
 List and Description of Files
@@ -31,6 +33,10 @@ Gadgets /
 
   Work_Timer - simple pomodoro style countdown timer to monitor time worked
 
+ObfuscateLogs /
+
+  ObfuscateLogs solution
+	
 Registry /
 
   cmd_prompt_auto_complete.reg - enable file name auto completion in cmd prompt
