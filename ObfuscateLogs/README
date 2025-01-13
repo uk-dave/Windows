@@ -1,0 +1,30 @@
+ObfuscateLogs
+=============
+
+This folder contains a Python application designed to process log 
+files or directories of log files and obfuscate any personal or 
+sensitive data based on predefined criteria. The program supports 
+processing individual files or entire directories, and it allows 
+for keyword-based obfuscation using a configuration file (`.ini` 
+format).
+
+This tool is particularly useful for sanitizing logs before sharing 
+or analyzing them to ensure sensitive information is not exposed.
+
+All code is provided as is.  For more information please see the
+provided LICENSE file.
+
+Copyright (C) 2025 David C. Merritt, david.c.merritt@siemens.com
+
+List and Description of Files
+=============================
+
+LICENSE: the GPL license file
+
+ObfuscateLogs.docx: detailed documentation on how to use 
+
+ObfuscateLogs.exe: standalone Windows executable 
+
+ObfuscateLogs.py: Python source code
+
+README: this readme file
