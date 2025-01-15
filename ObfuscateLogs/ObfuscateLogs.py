@@ -24,17 +24,21 @@
 #
 # ---------------------------------------------------------------------
 #
-# 29/11/2024  merritt  initial release
+# 2024-11-29 dcm initial release
+# 2025-01-13 dcm corrected processing UTF-8-BOM encoded files
+#                moved IPv4 obfuscation to optional switch
+#                resolved keyword partial string matching 
 #
 
 import os
 import sys
 import re
 import logging
+import chardet  # Add this to imports for encoding detection
 from datetime import datetime
 
 # version number
-VERSION = "1.0.0" 
+VERSION = "1.0.1" 
 
 # Mapping dictionary for consistent obfuscation within a file
 replacement_map = {}
@@ -109,8 +113,16 @@ def setup_logging(output_folder):
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
+ 
+    # Add a console handler for real-time output
+    #console_handler = logging.StreamHandler()
+    #console_handler.setLevel(logging.DEBUG)
+    #console_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    #console_handler.setFormatter(console_formatter)
+    #logging.getLogger().addHandler(console_handler)
+
     logging.info("Log file initialized.")
-    return log_filename
+    return log_filename 
 
 # Ensure the output folder exists
 def ensure_output_folder(output_folder):
@@ -131,7 +143,7 @@ def ensure_output_folder(output_folder):
         raise
 
 # Primary obfuscation function
-def obfuscate_content(content, file_path, keywords_dict, detailed_logging=False):
+def obfuscate_content(content, file_path, keywords_dict, detailed_logging=False, ipv4=False):
     """
     Processes the content of a file to identify and obfuscate sensitive data.
     Logs changes with before/after values, line numbers, and the type of obfuscation performed
@@ -147,12 +159,18 @@ def obfuscate_content(content, file_path, keywords_dict, detailed_logging=False)
     str: The obfuscated content.
     """
     
-    lines = content.splitlines()
+    #lines = content.splitlines()
+    # Explicitly split content only on newlines to preserve other characters
+    lines = content.split("\n")  # Explicitly use "\n" to avoid splitting on other special characters
+    #logging.debug(f"Split lines from content: {lines}")
     obfuscated_lines = []
 
     for line_number, line in enumerate(lines, start=1):
         original_line = line
         obfuscation_type = None  # Track which type of obfuscation was performed
+
+        # Debug: Log original line
+        #logging.debug(f"Original line {line_number}: {original_line}")
 
         # Call individual obfuscation sub-routines
         new_line = obfuscate_http_https_urls(line, line_number, file_path)
@@ -160,15 +178,25 @@ def obfuscate_content(content, file_path, keywords_dict, detailed_logging=False)
             obfuscation_type = 'HTTP/HTTPS URL Obfuscation'
             line = new_line  # Update line if modified by the URL obfuscation
 
-        new_line = obfuscate_ipv4_addresses(line, line_number, file_path)
-        if new_line != line:
-            obfuscation_type = 'IPv4 Address Obfuscation'
-            line = new_line  # Update line if modified by the IP obfuscation
+        # Apply IPv4 obfuscation only if enabled
+        if ipv4:
+            new_line = obfuscate_ipv4_addresses(line, line_number, file_path)
+            if new_line != line:
+                obfuscation_type = 'IPv4 Address Obfuscation'
+                line = new_line  # Update line if modified by the IP obfuscation
 
         new_line = obfuscate_keywords(line, line_number, file_path, keywords_dict, detailed_logging)
         if new_line != line:
             obfuscation_type = 'Keyword Obfuscation'
             line = new_line  # Update line if modified by the keyword obfuscation
+
+        # Debug: Log obfuscation result
+        #if original_line != line:
+        #    logging.debug(
+        #        f"Line {line_number} obfuscated ({obfuscation_type}): \n"
+        #        f"Before: {original_line}\n"
+        #        f"After:  {line}"
+        #    )
 
         # Add line to the obfuscated result
         obfuscated_lines.append(line)
@@ -205,9 +233,10 @@ def obfuscate_keywords(line, line_number, file_path, keywords_dict, detailed_log
         keyword = match.group(0)
         return keywords_dict.get(keyword, keyword)  # Replace if a mapping exists
 
-    # Regex to match any of the keywords
+    # Regex to match keywords as substrings
     if keywords_dict:
-        keywords_pattern = r'\b(' + '|'.join(re.escape(keyword) for keyword in keywords_dict.keys()) + r')\b'
+        # Build a pattern that matches keywords anywhere in the string
+        keywords_pattern = r'(' + '|'.join(re.escape(keyword) for keyword in keywords_dict.keys()) + r')'
         new_line = re.sub(keywords_pattern, replace_keyword, line)
 
         # Log changes if detailed logging is enabled
@@ -312,8 +341,24 @@ def detect_text_header_end(content):
             return i
     return len(content)  # Assume the entire content is ASCII if no non-ASCII byte is found
 
+# determine the file encoding type
+def detect_encoding(file_path):
+    """
+    Detect the encoding of a file using a heuristic approach.
+    
+    Arguments:
+    file_path (str): Path to the file to be analyzed.
+    
+    Returns:
+    str: Detected encoding type (e.g., 'utf-8', 'utf-8-sig').
+    """
+    with open(file_path, 'rb') as f:
+        raw_data = f.read(4096)  # Read a sample of the file
+        result = chardet.detect(raw_data)
+        return result['encoding']
+
 # Process a single file
-def process_file(file_path, output_folder, current_index, total_files, keywords_dict, detailed_logging=False):
+def process_file(file_path, output_folder, current_index, total_files, keywords_dict, detailed_logging=False, ipv4=False):
     """
     Processes a single file to obfuscate sensitive data and saves the obfuscated content.
     
@@ -327,35 +372,66 @@ def process_file(file_path, output_folder, current_index, total_files, keywords_
     """
 
     try:
+        # Detect file encoding
+        encoding = detect_encoding(file_path).lower()  # Normalize to lowercase
+        #print(f"Detected encoding for {file_path}: {encoding}")
+        
         # Construct the output file name
         base_name = os.path.basename(file_path)
         obfuscated_name = f"{os.path.splitext(base_name)[0]}_obfuscated{os.path.splitext(base_name)[1]}"
         output_path = os.path.join(output_folder, obfuscated_name)
 
-        # Read the file in binary mode
-        with open(file_path, "rb") as input_file:
-            content = input_file.read()
+        # Handle UTF-8-BOM encoded files differently
+        if encoding == 'utf-8-sig':
+            #print(f"***Processing UTF-8-BOM file: {file_path}")
+            
+            # Read the file as text, including the BOM
+            with open(file_path, "r", encoding="utf-8-sig") as input_file:
+                content = input_file.read()
+            #logging.debug(f"Content read from file {file_path}:\n{repr(content)}")
 
-        # Detect the end of the ASCII text header
-        text_header_end = detect_text_header_end(content)
+            # Strip the BOM for processing
+            bom = "\ufeff"  # BOM character
+            if content.startswith(bom):
+                content = content.lstrip(bom)  # Remove BOM
 
-        # Separate the text header and binary body
-        text_header = content[:text_header_end]
-        binary_body = content[text_header_end:]
+            # Obfuscate the content
+            obfuscated_content = obfuscate_content(content, file_path, keywords_dict, detailed_logging, ipv4)
 
-        # Decode and process the text header
-        try:
-            text_header_decoded = text_header.decode("ascii", errors="ignore")
-        except UnicodeDecodeError as e:
-            logging.error(f"Error decoding text header in file {file_path}: {e}")
-            text_header_decoded = ""
+            # Reapply the BOM when saving the file
+            with open(output_path, "w", encoding="utf-8-sig") as output_file:
+                output_file.write(bom + obfuscated_content)
+            
+            #print(f"Processed UTF-8-BOM file: {file_path} -> {output_path}")
+        else:
+            #print(f"Processing file with encoding {encoding}: {file_path}")
 
-        obfuscated_header = obfuscate_content(text_header_decoded, file_path, keywords_dict, detailed_logging)
+            # Read the file in binary mode
+            with open(file_path, "rb") as input_file:
+                content = input_file.read()
 
-        # Write the obfuscated header and untouched binary body to the output file
-        with open(output_path, "wb") as output_file:
-            output_file.write(obfuscated_header.encode("ascii", errors="ignore"))
-            output_file.write(binary_body)
+            # Detect the end of the ASCII text header
+            text_header_end = detect_text_header_end(content)
+
+            # Separate the text header and binary body
+            text_header = content[:text_header_end]
+            binary_body = content[text_header_end:]
+
+            # Decode and process the text header
+            try:
+                text_header_decoded = text_header.decode(encoding, errors="ignore")
+            except UnicodeDecodeError as e:
+                logging.error(f"Error decoding text header in file {file_path}: {e}")
+                text_header_decoded = ""
+
+            obfuscated_header = obfuscate_content(text_header_decoded, file_path, keywords_dict, detailed_logging, ipv4)
+
+            # Write the obfuscated header and untouched binary body to the output file
+            with open(output_path, "wb") as output_file:
+                output_file.write(obfuscated_header.encode(encoding, errors="ignore"))
+                output_file.write(binary_body)
+           
+            #print(f"Processed file with encoding {encoding}: {file_path} -> {output_path}")
 
         progress = f"Processing file {current_index} of {total_files}"
         logging.info(f"{progress}: {file_path} -> {output_path}")
@@ -365,7 +441,7 @@ def process_file(file_path, output_folder, current_index, total_files, keywords_
         print(f"Error processing file {file_path}: {e}")
 
 # Updated process_folder function to include detailed_logging
-def process_folder(folder_path, output_folder, keywords_dict, detailed_logging):
+def process_folder(folder_path, output_folder, keywords_dict, detailed_logging, ipv4):
     """
     Processes all files in a specified directory, obfuscating sensitive data and saving the results.
     
@@ -394,7 +470,7 @@ def process_folder(folder_path, output_folder, keywords_dict, detailed_logging):
             for file_name in files:
                 current_file_index += 1
                 file_path = os.path.join(root, file_name)
-                process_file(file_path, current_output_folder, current_file_index, total_files, keywords_dict, detailed_logging)
+                process_file(file_path, current_output_folder, current_file_index, total_files, keywords_dict, detailed_logging, ipv4)
 
         logging.info(f"Processed {total_files} files across {total_folders} folders.")
         print(f"Processed {total_files} files across {total_folders} folders.")
@@ -431,17 +507,23 @@ def main():
 
     parser = argparse.ArgumentParser(description="Obfuscate sensitive data in log files.")
     parser.add_argument("path", nargs="?", help="Path to a log file or folder containing log files.")
-    parser.add_argument("-o", "--output", help="Path to the output folder (optional).")
-    parser.add_argument("-v", "--version", action="store_true", help="Display the version of the script.")
     parser.add_argument(
         "-d", "--detailed", 
         action="store_true", 
         help="Enable detailed logging of individual obfuscations (default: off)."
     )
     parser.add_argument(
+        "-i", "--ipv4",
+        action="store_true",
+        help="Enable obfuscation of IPv4 addresses (default: off)."
+    )   
+    parser.add_argument(
         "-k", "--keywords", 
         help="Path to the keyword .ini file (optional). If not provided, defaults to the script's local .ini file."
     )
+    parser.add_argument("-o", "--output", help="Path to the output folder (optional).")
+    parser.add_argument("-v", "--version", action="store_true", help="Display the version of the script.")
+
     args = parser.parse_args()
 
     if args.version:
@@ -476,9 +558,9 @@ def main():
         print("Detailed logging is enabled. Changes will be logged.")
 
     if os.path.isfile(args.path):
-        process_file(args.path, output_folder, 1, 1, keywords_dict, args.detailed)
+        process_file(args.path, output_folder, 1, 1, keywords_dict, args.detailed, args.ipv4)
     elif os.path.isdir(args.path):
-        process_folder(args.path, output_folder, keywords_dict, args.detailed)
+        process_folder(args.path, output_folder, keywords_dict, args.detailed, args.ipv4)
 
     logging.info("Obfuscation process completed.")
     print(f"Obfuscation process completed. Log file created: {log_file}")
