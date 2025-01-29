@@ -28,6 +28,8 @@
 # 2025-01-13 dcm corrected processing UTF-8-BOM encoded files
 #                moved IPv4 obfuscation to optional switch
 #                resolved keyword partial string matching 
+# 2025-01-28 dcm corrected for case-sensitive duplicate keywords in ini
+#                made keyword matching case-insensitive
 #
 
 import os
@@ -38,7 +40,7 @@ import chardet  # Add this to imports for encoding detection
 from datetime import datetime
 
 # version number
-VERSION = "1.0.1" 
+VERSION = "1.0.2" 
 
 # Mapping dictionary for consistent obfuscation within a file
 replacement_map = {}
@@ -67,6 +69,11 @@ def load_keywords_from_file(ini_filepath, script_filename):
     dict: A dictionary of keywords and their corresponding replacement values.
     """
 
+    import configparser
+    config = configparser.ConfigParser()
+    config.optionxform = str  # Preserve case sensitivity for sections
+    keywords = {}
+
     # If no .ini file is provided, use the default one based on the script name
     if not ini_filepath:
         exe_dir = get_executable_directory()
@@ -83,16 +90,20 @@ def load_keywords_from_file(ini_filepath, script_filename):
         return {}
 
     # Read the file using configparser
-    import configparser
-    config = configparser.ConfigParser()
     config.read(ini_filepath)
 
     # Combine all sections into a single dictionary
-    keywords = {}
     for section in config.sections():
         for keyword, replacement in config.items(section):
-            keywords[keyword.strip()] = replacement.strip()
+            lower_keyword = keyword.strip().lower()
+            if lower_keyword in keywords:
+                message = f"Duplicate keyword ignored: '{keyword}' in section [{section}]"
+                print(f"Warning: {message}")
+                logging.warning(message)
+            else:
+                keywords[lower_keyword] = replacement.strip()
 
+    logging.info(f"Loaded {len(keywords)} unique keywords from {ini_filepath}.")
     return keywords
 
 # Setup logging
@@ -231,13 +242,19 @@ def obfuscate_keywords(line, line_number, file_path, keywords_dict, detailed_log
     
     def replace_keyword(match):
         keyword = match.group(0)
-        return keywords_dict.get(keyword, keyword)  # Replace if a mapping exists
-
+        replacement = keywords_dict.get(keyword.lower(), keyword)  # Match case-insensitively
+        if detailed_logging:
+            logging.info(f"Keyword '{keyword}' replaced with '{replacement}' on line {line_number}")
+        return replacement
+        
     # Regex to match keywords as substrings
     if keywords_dict:
-        # Build a pattern that matches keywords anywhere in the string
+        # Build a case-insensitive regex pattern
         keywords_pattern = r'(' + '|'.join(re.escape(keyword) for keyword in keywords_dict.keys()) + r')'
-        new_line = re.sub(keywords_pattern, replace_keyword, line)
+        #logging.debug(f"Regex pattern for keywords: {keywords_pattern}")
+
+        # Apply the case-insensitive replacement
+        new_line = re.sub(keywords_pattern, replace_keyword, line, flags=re.IGNORECASE)
 
         # Log changes if detailed logging is enabled
         if detailed_logging and new_line != line:
@@ -251,7 +268,7 @@ def obfuscate_keywords(line, line_number, file_path, keywords_dict, detailed_log
         return new_line
 
     return line  # Return the line unmodified if no keywords exist
-
+    
 # Sub-routine to obfuscate HTTP/HTTPS URLs
 def obfuscate_http_https_urls(line, line_number, file_path):
     """
